@@ -19,12 +19,12 @@ import android.widget.ListView;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.iot.buybuddy.model.Cart;
 import com.thoughtworks.iot.buybuddy.model.Product;
-import com.thoughtworks.iot.buybuddy.service.GetProductService;
+import com.thoughtworks.iot.buybuddy.service.AddProductService;
+import com.thoughtworks.iot.buybuddy.service.DeleteProductService;
 
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -132,11 +132,7 @@ public class NfcReaderActivity extends Activity {
         adapter.disableForegroundDispatch(activity);
     }
 
-    public void removeItem(View v) {
-        System.out.println("Remove the item");
-        Product itemToRemove = (Product) v.getTag();
-        adapter.remove(itemToRemove);
-    }
+
 
     private class NdefReaderTask extends AsyncTask<Tag, Void, String> {
         @Override
@@ -170,12 +166,22 @@ public class NfcReaderActivity extends Activity {
         @Override
         protected void onPostExecute(String result) {
             if (result != null) {
-                GetProductService service = new GetProductService(context,adapter);
+                AddProductService service = new AddProductService(context,adapter);
                 String[] params = new String[2];
                 params[0] = cart._id;
                 params[1] = result;
                 service.execute(params);
             }
         }
+    }
+
+    public void removeItem(View v) {
+        Product itemToRemove = (Product) v.getTag();
+        DeleteProductService service = new DeleteProductService(context);
+        String[] params = new String[2];
+        params[0] = cart._id;
+        params[1] = itemToRemove._id;
+        service.execute(params);
+        adapter.remove(itemToRemove);
     }
 }

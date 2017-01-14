@@ -1,14 +1,10 @@
 package com.thoughtworks.iot.buybuddy.service;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Bundle;
-import android.widget.Adapter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.iot.buybuddy.LazyAdapter;
-import com.thoughtworks.iot.buybuddy.NfcReaderActivity;
 import com.thoughtworks.iot.buybuddy.model.Cart;
 
 import java.io.IOException;
@@ -19,14 +15,14 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class GetProductService extends AsyncTask<String, Void, String> {
+public class AddProductService extends AsyncTask<String, Void, String> {
     String url;
     Retrofit retrofit;
     RestAPI restInt;
     Context context;
     LazyAdapter adapter;
 
-    public GetProductService(Context context, LazyAdapter adapter) {
+    public AddProductService(Context context, LazyAdapter adapter) {
         this.context = context;
         this.adapter = adapter;
         url = "http://ec2-54-255-184-116.ap-southeast-1.compute.amazonaws.com:3000";
