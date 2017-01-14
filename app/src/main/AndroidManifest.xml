@@ -40,7 +40,8 @@
                 android:resource="@xml/nfc_tech_filter" />
         </activity>
         <activity android:name=".NfcReaderActivity" />
-        <activity android:name=".ShoppingActivity"></activity>
+        <activity android:name=".ShoppingActivity" />
+        <activity android:name=".SuccessActivity"></activity>
     </application>
 
 </manifest>

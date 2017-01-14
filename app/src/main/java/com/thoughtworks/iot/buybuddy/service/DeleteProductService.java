@@ -1,10 +1,15 @@
 package com.thoughtworks.iot.buybuddy.service;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.iot.buybuddy.LazyAdapter;
+import com.thoughtworks.iot.buybuddy.R;
 import com.thoughtworks.iot.buybuddy.model.Cart;
 
 import java.io.IOException;
@@ -20,9 +25,11 @@ public class DeleteProductService extends AsyncTask<String, Void, String> {
     Retrofit retrofit;
     RestAPI restInt;
     Context context;
+    LazyAdapter adapter;
 
-    public DeleteProductService(Context context) {
+    public DeleteProductService(Context context,LazyAdapter adapter) {
         this.context = context;
+        this.adapter = adapter;
         url = "http://ec2-54-255-184-116.ap-southeast-1.compute.amazonaws.com:3000";
         retrofit = new Retrofit.Builder()
                 .baseUrl(url).addConverterFactory(GsonConverterFactory.create()).build();
@@ -44,14 +51,31 @@ public class DeleteProductService extends AsyncTask<String, Void, String> {
     }
 
     private Object findMethodAndExecute(String[] params) throws IOException {
-        Map<String, String> tag = new HashMap<>();
-        tag.put("tagId", params[1]);
-        Response<Cart> cart = restInt.deleteItemFromCart(params[0], tag).execute();
+        Response<Cart> cart = restInt.deleteItemFromCart(params[0], params[1]).execute();
         return cart.body();
     }
 
     @Override
     protected void onPostExecute(String result) {
+        try {
+            Cart cart = new ObjectMapper().readValue(result, Cart.class);
+            adapter.clear();
+            adapter.addAll(cart.products);
+            TextView totalPrice = (TextView) ((Activity)context).findViewById(R.id.totalPrice);
+            totalPrice.setText(""+cart.value);
+            TextView status = (TextView) ((Activity)context).findViewById(R.id.status);
+            status.setText(cart.status);
+            if(cart.products.size()== 0){
+                totalPrice = (TextView) ((Activity)context).findViewById(R.id.totalPrice);
+                totalPrice.setVisibility(View.INVISIBLE);
+                status = (TextView) ((Activity)context).findViewById(R.id.status);
+                status.setVisibility(View.INVISIBLE);
+                Button payButton = (Button) ((Activity)context).findViewById(R.id.buttonPay);
+                payButton.setVisibility(View.INVISIBLE);
+            }
 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

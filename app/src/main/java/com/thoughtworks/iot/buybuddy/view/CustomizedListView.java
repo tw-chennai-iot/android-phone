@@ -12,7 +12,7 @@ public class CustomizedListView {
     public Product product;
     public ImageView image;
     public TextView name;
-    public TextView id;
+    public TextView tagId;
     public TextView price;
     public Button removeButton;
 

@@ -14,13 +14,16 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.iot.buybuddy.model.Cart;
 import com.thoughtworks.iot.buybuddy.model.Product;
 import com.thoughtworks.iot.buybuddy.service.AddProductService;
 import com.thoughtworks.iot.buybuddy.service.DeleteProductService;
+import com.thoughtworks.iot.buybuddy.service.PayService;
 
 
 import java.io.IOException;
@@ -49,6 +52,16 @@ public class NfcReaderActivity extends Activity {
             cart = mapper.readValue(bundle.getString("cart"), Cart.class);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        if(cart.value !=0){
+            TextView totalPrice = (TextView) findViewById(R.id.totalPrice);
+            totalPrice.setText(""+cart.value);
+            TextView status = (TextView) findViewById(R.id.status);
+            status.setText(cart.status);
+        }
+        if(cart.value == 0){
+            Button payButton = (Button) findViewById(R.id.buttonPay);
+            payButton.setVisibility(View.INVISIBLE);
         }
         setupListViewAdapter();
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
@@ -177,12 +190,17 @@ public class NfcReaderActivity extends Activity {
 
     public void removeItem(View v) {
         Product itemToRemove = (Product) v.getTag();
-        System.out.println(itemToRemove.productId);
-        DeleteProductService service = new DeleteProductService(context);
+        DeleteProductService service = new DeleteProductService(context,adapter);
         String[] params = new String[2];
         params[0] = cart._id;
-        params[1] = itemToRemove.productId;
+        params[1] = itemToRemove.tagId;
         service.execute(params);
-        adapter.remove(itemToRemove);
+    }
+
+    public void pay(View v){
+        PayService service = new PayService(context);
+        String[] params = new String[2];
+        params[0] = cart._id;
+        service.execute(params);
     }
 }

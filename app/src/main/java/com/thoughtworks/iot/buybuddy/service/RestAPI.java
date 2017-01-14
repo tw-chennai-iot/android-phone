@@ -26,7 +26,10 @@ public interface RestAPI{
     @POST("/cart/{cart-id}")
     Call<Cart> addItemToCart(@Path("cart-id")String cartId, @Body() Map<String,String> tagDetails);
 
-    @DELETE("/cart/{cart-id}")
-    Call<Cart> deleteItemFromCart(@Path("cart-id")String cartId, @Body() Map<String,String> tagDetails);
+    @DELETE("/cart/{cart-id}/tag/{tag-id}")
+    Call<Cart> deleteItemFromCart(@Path("cart-id")String cartId,@Path("tag-id")String tagId);
+
+    @POST("/cart/{cart-id}/pay")
+    Call<Cart> pay(@Path("cart-id")String cartId);
 
 }

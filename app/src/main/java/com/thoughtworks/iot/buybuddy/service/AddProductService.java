@@ -1,10 +1,15 @@
 package com.thoughtworks.iot.buybuddy.service;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.iot.buybuddy.LazyAdapter;
+import com.thoughtworks.iot.buybuddy.R;
 import com.thoughtworks.iot.buybuddy.model.Cart;
 
 import java.io.IOException;
@@ -56,8 +61,17 @@ public class AddProductService extends AsyncTask<String, Void, String> {
     protected void onPostExecute(String result) {
         try {
             Cart cart = new ObjectMapper().readValue(result, Cart.class);
-            System.out.println("======================>>>>>"+cart.products.get(0).productId + " is the product id");
-            adapter.insert(cart.products.get(cart.products.size() - 1), 0);
+            adapter.clear();
+            adapter.addAll(cart.products);
+            TextView totalPrice = (TextView) ((Activity)context).findViewById(R.id.totalPrice);
+            totalPrice.setText(""+cart.value);
+            TextView status = (TextView) ((Activity)context).findViewById(R.id.status);
+            status.setText(cart.status);
+            Button payButton = (Button) ((Activity)context).findViewById(R.id.buttonPay);
+            payButton.setVisibility(View.VISIBLE);
+            totalPrice.setVisibility(View.VISIBLE);
+            status.setVisibility(View.VISIBLE);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
