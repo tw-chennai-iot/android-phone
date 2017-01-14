@@ -56,6 +56,7 @@ public class AddProductService extends AsyncTask<String, Void, String> {
     protected void onPostExecute(String result) {
         try {
             Cart cart = new ObjectMapper().readValue(result, Cart.class);
+            System.out.println("======================>>>>>"+cart.products.get(0).productId + " is the product id");
             adapter.insert(cart.products.get(cart.products.size() - 1), 0);
         } catch (IOException e) {
             e.printStackTrace();

@@ -23,10 +23,10 @@ public interface RestAPI{
     @POST("/cart")
     Call<Cart> createCart();
 
-    @POST("/{cart-id}")
+    @POST("/cart/{cart-id}")
     Call<Cart> addItemToCart(@Path("cart-id")String cartId, @Body() Map<String,String> tagDetails);
 
-    @DELETE("/{cart-id}")
+    @DELETE("/cart/{cart-id}")
     Call<Cart> deleteItemFromCart(@Path("cart-id")String cartId, @Body() Map<String,String> tagDetails);
 
 }

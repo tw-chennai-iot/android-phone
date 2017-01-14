@@ -61,6 +61,12 @@
         android:layout_toLeftOf="@+id/button2"
         android:layout_toStartOf="@+id/button2" />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/productId"
+        android:visibility="invisible"
+        />
     <Button
         android:text="Remove"
         android:layout_width="50dp"

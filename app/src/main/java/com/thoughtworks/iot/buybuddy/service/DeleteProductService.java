@@ -46,7 +46,7 @@ public class DeleteProductService extends AsyncTask<String, Void, String> {
     private Object findMethodAndExecute(String[] params) throws IOException {
         Map<String, String> tag = new HashMap<>();
         tag.put("tagId", params[1]);
-        Response<Cart> cart = restInt.addItemToCart(params[0], tag).execute();
+        Response<Cart> cart = restInt.deleteItemFromCart(params[0], tag).execute();
         return cart.body();
     }
 

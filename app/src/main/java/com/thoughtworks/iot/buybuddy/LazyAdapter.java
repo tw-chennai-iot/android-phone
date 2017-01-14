@@ -48,8 +48,8 @@ public class LazyAdapter extends ArrayAdapter<Product> {
 
         holder.name=(TextView) row.findViewById(R.id.name);
         holder.name.setText(holder.product.name);
-//        holder.description = (TextView) row.findViewById(R.id.description);
-//        holder.description.setText(holder.product.description);
+        holder.id = (TextView) row.findViewById(R.id.productId);
+        holder.id.setText(holder.product.productId);
 
         holder.price = (TextView) row.findViewById(R.id.price);
         holder.price.setText(holder.product.price);

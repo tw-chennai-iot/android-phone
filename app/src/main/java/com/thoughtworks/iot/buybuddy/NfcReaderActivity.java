@@ -177,10 +177,11 @@ public class NfcReaderActivity extends Activity {
 
     public void removeItem(View v) {
         Product itemToRemove = (Product) v.getTag();
+        System.out.println(itemToRemove.productId);
         DeleteProductService service = new DeleteProductService(context);
         String[] params = new String[2];
         params[0] = cart._id;
-        params[1] = itemToRemove._id;
+        params[1] = itemToRemove.productId;
         service.execute(params);
         adapter.remove(itemToRemove);
     }
