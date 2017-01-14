@@ -1,9 +1,11 @@
 package com.thoughtworks.iot.buybuddy.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Cart {
-    double totalPrice;
-    List<Product> products;
-    String status;
+    public String _id;
+    public double totalPrice;
+    public List<Product> products = new ArrayList<>();
+    public String status;
 }

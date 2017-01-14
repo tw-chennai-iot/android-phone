@@ -2,6 +2,7 @@ package com.thoughtworks.iot.buybuddy;
 
 import android.app.Activity;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.nfc.NdefMessage;
@@ -15,8 +16,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 
-import com.thoughtworks.iot.buybuddy.view.Product;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.thoughtworks.iot.buybuddy.model.Cart;
+import com.thoughtworks.iot.buybuddy.model.Product;
+import com.thoughtworks.iot.buybuddy.service.GetProductService;
 
+
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,14 +33,23 @@ public class NfcReaderActivity extends Activity {
     public static final String MIME_TEXT_PLAIN = "text/plain";
     public static final String TAG = "NfcDemo";
     private NfcAdapter mNfcAdapter;
-
     LazyAdapter adapter;
-    List<String> stringArray = new ArrayList<>();
+    Cart cart;
+    Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        context = this;
         super.onCreate(savedInstanceState);
+        Bundle bundle = null;
+        bundle = this.getIntent().getExtras();
         setContentView(R.layout.activity_nfc_reader);
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            cart = mapper.readValue(bundle.getString("cart"), Cart.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         setupListViewAdapter();
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
         handleIntent(getIntent());
@@ -42,11 +57,8 @@ public class NfcReaderActivity extends Activity {
     }
 
     private void setupListViewAdapter() {
-        List<Product> products = new ArrayList<>();
-        Product product = new Product();
-        product.name = "First product";
-        products.add(product);
-        adapter = new LazyAdapter(this, R.layout.list_item,products);
+        List<Product> products = cart.products;
+        adapter = new LazyAdapter(this, R.layout.list_item, products);
         final ListView listView = (ListView) findViewById(R.id.listview);
         listView.setAdapter(adapter);
     }
@@ -120,7 +132,7 @@ public class NfcReaderActivity extends Activity {
         adapter.disableForegroundDispatch(activity);
     }
 
-    public void removeItem(View v){
+    public void removeItem(View v) {
         System.out.println("Remove the item");
         Product itemToRemove = (Product) v.getTag();
         adapter.remove(itemToRemove);
@@ -158,9 +170,11 @@ public class NfcReaderActivity extends Activity {
         @Override
         protected void onPostExecute(String result) {
             if (result != null) {
-                Product product = new Product();
-                product.name = result;
-               adapter.insert(product,0);
+                GetProductService service = new GetProductService(context,adapter);
+                String[] params = new String[2];
+                params[0] = cart._id;
+                params[1] = result;
+                service.execute(params);
             }
         }
     }

@@ -1,9 +1,13 @@
 package com.thoughtworks.iot.buybuddy.service;
 
 import com.thoughtworks.iot.buybuddy.model.Cart;
+import com.thoughtworks.iot.buybuddy.model.Product;
 import com.thoughtworks.iot.buybuddy.model.ResponseFrom;
 
+import java.util.Map;
+
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
@@ -17,4 +21,7 @@ public interface RestAPI{
 
     @POST("/cart")
     Call<Cart> createCart();
+
+    @POST("/{cart-id}")
+    Call<Cart> addItemToCart(@Path("cart-id")String cartId, @Body() Map<String,String> tagDetails);
 }
