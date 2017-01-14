@@ -1,7 +1,5 @@
 package com.thoughtworks.iot.buybuddy.view;
 
-import android.app.Activity;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -9,7 +7,7 @@ import android.widget.TextView;
 
 
 public class CustomizedListView {
-    ListView listView;
+    public Product product;
     public ImageView image;
     public TextView name;
     public TextView description;

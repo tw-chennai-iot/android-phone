@@ -17,19 +17,20 @@ import com.thoughtworks.iot.buybuddy.service.RestService;
 public class ShoppingActivity extends AppCompatActivity {
 
     Intent intent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shopping);
     }
 
-    void startShopping(View view){
-        String url ="http://ec2-54-255-184-116.ap-southeast-1.compute.amazonaws.com:3000/cart";
+    void startShopping(View view) {
+        String url = "http://ec2-54-255-184-116.ap-southeast-1.compute.amazonaws.com:3000/cart";
         intent = new Intent(this, NfcReaderActivity.class);
         RestService service = new RestService();
         String[] params = new String[1];
         params[0]="postCart";
         service.execute(params);
-
+        startActivity(intent);
     }
 }

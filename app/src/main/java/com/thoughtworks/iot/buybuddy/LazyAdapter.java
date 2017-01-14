@@ -1,40 +1,36 @@
 package com.thoughtworks.iot.buybuddy;
 
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import com.thoughtworks.iot.buybuddy.view.*;
 
-public class LazyAdapter extends BaseAdapter {
+import com.thoughtworks.iot.buybuddy.view.CustomizedListView;
+import com.thoughtworks.iot.buybuddy.view.Product;
 
-    private Activity activity;
-    private List<String>data;
-    private static LayoutInflater inflater = null;
+import java.util.List;
 
-    public LazyAdapter(Activity a, List<String> d) {
-        activity = a;
-        data = d;
-        inflater = (LayoutInflater) activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+public class LazyAdapter extends ArrayAdapter<Product> {
+
+    private Context context;
+    private List<Product> items;
+    private int layoutResourceId;
+
+
+    public LazyAdapter(Context context, int layoutResourceId, List<Product> items) {
+        super(context, layoutResourceId, items);
+        this.layoutResourceId = layoutResourceId;
+        this.context = context;
+        this.items = items;
     }
-
     public int getCount() {
-        return data.size();
-    }
-
-    public Object getItem(int position) {
-        return position;
+        return items.size();
     }
 
     public long getItemId(int position) {
@@ -42,21 +38,26 @@ public class LazyAdapter extends BaseAdapter {
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
-        CustomizedListView customView=new CustomizedListView();
         View row = convertView;
-        View rowView;
-        rowView = inflater.inflate(R.layout.list_item, null);
-        System.out.println(rowView);
-        customView.name=(TextView) rowView.findViewById(R.id.name);
-        customView.name.setText(data.get(position));
-        rowView.setTag(customView);
-        return rowView;
+        CustomizedListView holder=new CustomizedListView();
+        LayoutInflater inflater = ((Activity) context).getLayoutInflater();
+        row = inflater.inflate(layoutResourceId, parent, false);
+        holder.product = items.get(position);
+
+        holder.removeButton = (Button) row.findViewById(R.id.button2);
+        holder.removeButton.setTag(holder.product);
+
+        holder.name=(TextView) row.findViewById(R.id.name);
+        holder.name.setText(holder.product.name);
+        holder.description = (TextView) row.findViewById(R.id.description);
+        holder.description.setText(holder.product.description);
+
+        holder.price = (TextView) row.findViewById(R.id.price);
+        holder.price.setText(holder.product.price);
+
+        row.setTag(holder);
+        return row;
     }
 
 
-    public void removeItem(View view) {
-        CustomizedListView itemToRemove = (CustomizedListView) view.getTag();
-        final ListView listView = (ListView) activity.findViewById(R.id.listview);
-        System.out.println(itemToRemove.name + " is deleted");
-    }
 }

@@ -13,12 +13,9 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.thoughtworks.iot.buybuddy.service.RestService;
+import com.thoughtworks.iot.buybuddy.view.Product;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -34,15 +31,10 @@ public class NfcReaderActivity extends Activity {
     LazyAdapter adapter;
     List<String> stringArray = new ArrayList<>();
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nfc_reader);
-        adapter = new LazyAdapter(this, stringArray);
-        final ListView listView = (ListView) findViewById(R.id.listview);
-        listView.setAdapter(adapter);
         setupListViewAdapter();
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this);
         handleIntent(getIntent());
@@ -50,9 +42,13 @@ public class NfcReaderActivity extends Activity {
     }
 
     private void setupListViewAdapter() {
-//        adapter = new LazyAdapter(this, R.layout.atom_pay_list_item, new ArrayList<AtomPayment>());
-//        ListView atomPaysListView = (ListView)findViewById(R.id.EnterPays_atomPaysList);
-//        atomPaysListView.setAdapter(adapter);
+        List<Product> products = new ArrayList<>();
+        Product product = new Product();
+        product.name = "First product";
+        products.add(product);
+        adapter = new LazyAdapter(this, R.layout.list_item,products);
+        final ListView listView = (ListView) findViewById(R.id.listview);
+        listView.setAdapter(adapter);
     }
 
 
@@ -65,7 +61,6 @@ public class NfcReaderActivity extends Activity {
     @Override
     protected void onPause() {
         stopForegroundDispatch(this, mNfcAdapter);
-
         super.onPause();
     }
 
@@ -77,10 +72,8 @@ public class NfcReaderActivity extends Activity {
     private void handleIntent(Intent intent) {
         String action = intent.getAction();
         if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(action)) {
-
             String type = intent.getType();
             if (MIME_TEXT_PLAIN.equals(type)) {
-
                 Tag tag = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG);
                 new NdefReaderTask().execute(tag);
 
@@ -127,20 +120,21 @@ public class NfcReaderActivity extends Activity {
         adapter.disableForegroundDispatch(activity);
     }
 
+    public void removeItem(View v){
+        System.out.println("Remove the item");
+        Product itemToRemove = (Product) v.getTag();
+        adapter.remove(itemToRemove);
+    }
 
     private class NdefReaderTask extends AsyncTask<Tag, Void, String> {
-
         @Override
         protected String doInBackground(Tag... params) {
             Tag tag = params[0];
-
             Ndef ndef = Ndef.get(tag);
             if (ndef == null) {
                 return null;
             }
-
             NdefMessage ndefMessage = ndef.getCachedNdefMessage();
-
             NdefRecord[] records = ndefMessage.getRecords();
             for (NdefRecord ndefRecord : records) {
                 if (ndefRecord.getTnf() == NdefRecord.TNF_WELL_KNOWN && Arrays.equals(ndefRecord.getType(), NdefRecord.RTD_TEXT)) {
@@ -151,7 +145,6 @@ public class NfcReaderActivity extends Activity {
                     }
                 }
             }
-
             return null;
         }
 
@@ -165,12 +158,10 @@ public class NfcReaderActivity extends Activity {
         @Override
         protected void onPostExecute(String result) {
             if (result != null) {
-                stringArray.add(result);
-                adapter.notifyDataSetChanged();
-                RestService service = new RestService();
-                service.execute(result);
+                Product product = new Product();
+                product.name = result;
+               adapter.insert(product,0);
             }
-
         }
     }
 }
