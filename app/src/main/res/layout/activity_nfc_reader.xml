@@ -11,16 +11,6 @@
     tools:context="com.thoughtworks.iot.buybuddy.NfcReaderActivity">
 
 
-    <ListView
-        android:id="@+id/listview"
-        android:scrollbars="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-
     <Button
         android:id="@+id/buttonPay"
         android:text="Pay"
@@ -31,25 +21,61 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
 
+    <ListView
+        android:id="@+id/listview"
+        android:scrollbars="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_below="@+id/thanks"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="19dp" />
+
     <TextView
-        android:text=""
+        android:text="Your cart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="37dp"
-        android:layout_marginStart="37dp"
-        android:id="@+id/totalPrice"
-        android:layout_below="@+id/listview"
-        android:layout_toRightOf="@+id/buttonPay"
-        android:layout_toEndOf="@+id/buttonPay"
-        android:layout_marginTop="46dp" />
+        android:layout_marginLeft="15dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="7dp"
+        android:id="@+id/thanks"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        />
 
     <TextView
         android:text=""
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/totalPrice"
         android:layout_above="@+id/buttonPay"
-        android:layout_alignRight="@+id/totalPrice"
-        android:layout_alignEnd="@+id/totalPrice"
-        android:layout_marginBottom="21dp"
-        android:id="@+id/status" />
+        android:layout_toLeftOf="@+id/status"
+        android:layout_toStartOf="@+id/status"
+        android:layout_marginRight="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="28dp" />
+
+    <TextView
+        android:text=""
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/status"
+        android:layout_marginRight="18dp"
+        android:layout_marginEnd="18dp"
+        android:layout_alignBaseline="@+id/totalPrice"
+        android:layout_alignBottom="@+id/totalPrice"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:text="Shop again!"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/startAgain"
+        android:onClick="startAgain"
+        android:layout_alignBaseline="@+id/buttonPay"
+        android:layout_alignBottom="@+id/buttonPay"
+        android:layout_centerHorizontal="true"
+        android:visibility="invisible"/>
 </RelativeLayout>

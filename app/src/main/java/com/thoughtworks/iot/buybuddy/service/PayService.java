@@ -3,6 +3,7 @@ package com.thoughtworks.iot.buybuddy.service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Bundle;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.iot.buybuddy.SuccessActivity;
@@ -49,7 +50,10 @@ public class PayService extends AsyncTask<String, Void, String> {
 
     @Override
     protected void onPostExecute(String result) {
+        Bundle bundle = new Bundle();
+        bundle.putString("cart",result);
         Intent intent = new Intent(context, SuccessActivity.class);
+        intent.putExtras(bundle);
         context.startActivity(intent);
     }
 }

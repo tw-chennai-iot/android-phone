@@ -13,6 +13,8 @@ import android.widget.TextView;
 import com.thoughtworks.iot.buybuddy.view.CustomizedListView;
 import com.thoughtworks.iot.buybuddy.model.Product;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 public class LazyAdapter extends ArrayAdapter<Product> {
@@ -44,6 +46,14 @@ public class LazyAdapter extends ArrayAdapter<Product> {
         holder.product = items.get(position);
 
         holder.removeButton = (Button) row.findViewById(R.id.button2);
+        TextView heading = (TextView) ((Activity) context).findViewById(R.id.thanks);
+        if(heading.getText().equals("Your cart")) {
+            holder.removeButton.setVisibility(View.VISIBLE);
+            TextView price = (TextView)((Activity) context).findViewById(R.id.totalPrice);
+            price.setVisibility(View.VISIBLE);
+            TextView status = (TextView)((Activity) context).findViewById(R.id.status);
+            status.setVisibility(View.VISIBLE);
+        }
         holder.removeButton.setTag(holder.product);
 
         holder.name=(TextView) row.findViewById(R.id.name);
