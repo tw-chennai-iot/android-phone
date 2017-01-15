@@ -53,6 +53,8 @@ public class LazyAdapter extends ArrayAdapter<Product> {
             price.setVisibility(View.VISIBLE);
             TextView status = (TextView)((Activity) context).findViewById(R.id.status);
             status.setVisibility(View.VISIBLE);
+        }else{
+            holder.removeButton.setVisibility(View.INVISIBLE);
         }
         holder.removeButton.setTag(holder.product);
 
